@@ -1,0 +1,40 @@
+pollutantmean<-function(directory,pollutant,id)
+{
+  
+  ## reinicializo las variables
+  busqueda<-data.frame()
+  vect<-c()
+  vectornitratesina<-c()
+  a<-0
+  media<-0
+  
+  ## files_full contiene todos los csv contenidos en var directory
+  files_full<-list.files(directory,full.names=TRUE)
+  
+  ##bucle para leer los csv segun numero de id
+  for(a in id){
+    ##crea un dataframe con los datos de los diferentes csv segin su nuemro id
+    busqueda<-rbind(busqueda,read.csv(files_full[a]))
+    ##condicion segun var pollutant
+     if(pollutant=="nitrate")
+    {
+    ## obtener vector con los valores de var nitrate de los csv segun id y sin NA
+    ## para poder calcular media
+    vect<-busqueda[ ,3,drop=FALSE]
+    sinna<-is.na(vect)
+    vectornitratesina<-vect[!sinna]
+    media<-mean(vectornitratesina)
+    ## obtener vector con los valores de var sulfate de los csv segun id y sin NA
+    ## para poder calcular media
+    }else if(pollutant=="sulfate")
+    {
+      vect<-busqueda[ ,2,drop=FALSE]
+    sinna<-is.na(vect)
+    vectorsulfatesina<-vect[!sinna]
+    media<-mean(vectorsulfatesina)
+    ##control error sino introducen correctamente var polluntant
+    }else
+    {print("Los valores introducidos no son validos")}
+  }
+  media
+}
