@@ -1,0 +1,48 @@
+corr<-function(directory,threshold)
+{
+  ##Inicializo las variables a utilizar
+  
+  contad<-1
+  long<-0
+  coefresult<-vector(mode = "numeric",length = long)
+  umbral<-list(...)
+  threshold<-umbral[1]
+  
+  ##print(threshold)
+  
+  files_csv<-list.files(directory,full.names=TRUE)
+  long<-length(files_csv)
+  for(b in 1:long){
+    archive<-data.frame() 
+    archivenew<-data.frame()
+    nasin<-c()
+    sulfato<-c()
+    nitrato<-c() 
+    result<-0
+    coef<-0
+    
+    result<-complete(directory,b)
+    
+    if( result[2] > threshold)
+    {
+      archive<-rbind(archive,read.csv(files_csv[b]))
+      
+      nasin<-complete.cases(archive)
+      archivenew<-archive[nasin, ]
+      
+      sulfato<-archivenew[ ,2,drop=FALSE]
+      nitrato<-archivenew[ ,3,drop=FALSE]
+      coef<-cor(sulfato,nitrato, use = "pairwise.complete.obs")
+      
+      
+      coefresult[contad]<-coef   
+      
+      contad<-contad+1
+      
+    }
+    else{}
+    
+  }  
+  
+  coefresult
+}
