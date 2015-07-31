@@ -1,0 +1,47 @@
+complete<-function(directory,id)
+{
+  ##Inicializo las variables a utilizar
+  busqueda<-data.frame()
+  basenonas<-data.frame()
+  casos<-data.frame()
+  sin<-c()
+  nobs<-c()
+  casosparti<-0
+  casosvect<-c()
+  cont<-1
+  ##Creo matriz con numero de filas=id y 1 colunma para guardar los nobs por id
+  maxfilas<-length(id)
+  m<-matrix(nrow=maxfilas,ncol=1)
+  
+  ## guardo todos los csv que hay en el directory passado
+  files_full<-list.files(directory,full.names=TRUE)
+  
+  ##Bucle con condicion
+  for(a in id){
+    ##Inicializo var en cada bucle
+    busqueda<-data.frame() 
+    basenonas<-data.frame()
+    sin<-c()
+    
+    ##Lectura del csv pertiniente
+    busqueda<-rbind(busqueda,read.csv(files_full[a]))
+    
+    ##del contenido del csv, elimino los NA
+    sin<-complete.cases(busqueda)
+    basenonas<-busqueda[sin, ]
+    ##Valor del num columnas sin los NA, que corresponden al numero de obs
+    casosparti<-c(nrow(basenonas))
+    
+    ##valor de nobs en ese csv, lo guardo en posicion de matriz ya creada
+    m[cont][1]<-casosparti
+    cont<-cont+1
+    ##creo vector nobs donde le paso los datos de los nobs contenidos en la matriz
+    nobs<-m[ ,1,drop=FALSE]
+    
+    ##Creo data frame para guardar var id csvs y num obs
+    casos<-data.frame(id,nobs)
+    
+  }
+  ##retorno dataframe
+  casos
+}
